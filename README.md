@@ -26,14 +26,7 @@ MySQL (v5.7 or later)
 Dependencies
 
 
-Body-parser
-dotenv
-express
-express-validator
-joi
-mysql2
-sequelize
-uuid
+npm install body-parser dotenv express express-validator joi mysql2 sequelize uuid
 
 
 SETUP SQL DATABASE
