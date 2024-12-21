@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const { sequelize } = require('./config/database');
 const bookRoutes = require('./routes/bookRoutes');
 const memberRoutes = require('./routes/memberRoutes');
-// const borrowingRoutes = require('./routes/borrowingRoutes');
+const borrowingRoutes = require('./routes/borrowingRoutes');
 
 const app = express();
 
@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 // Routes
 app.use('/api/books', bookRoutes);
 app.use('/api/members', memberRoutes);
-// app.use('/api/borrowings', borrowingRoutes);
+app.use('/api/borrowings', borrowingRoutes);
 
 sequelize.authenticate()
   .then(() => {
