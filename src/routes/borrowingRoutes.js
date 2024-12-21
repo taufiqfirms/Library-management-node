@@ -3,7 +3,6 @@ const { body, validationResult } = require('express-validator');
 const router = express.Router();
 const borrowingController = require('../controllers/borrowingController'); // Ensure this is the correct path
 
-// POST route to create a new borrowing
 router.post(
   '/',
   [
@@ -15,9 +14,9 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    next(); // Proceed to the borrowingController
+    next();
   },
-  borrowingController.createBorrowing // Make sure this is defined in borrowingController
+  borrowingController.createBorrowing
 );
 
 router.put('/:id/return', borrowingController.returnBook);

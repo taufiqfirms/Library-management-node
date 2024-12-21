@@ -1,4 +1,4 @@
-const Borrowing = require('../models/borrowing'); // Ensure this is the correct path
+const Borrowing = require('../models/borrowing');
 const Book = require('../models/book');
 const Member = require('../models/member');
 
