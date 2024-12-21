@@ -1,71 +1,57 @@
-const Member = require('../models/member');
+const { createMember, updateMember, deleteMember, getMembersWithPagination } = require('../service/memberService');
 
 // Create
-exports.createMember = async (req, res) => {
+const createMemberController = async (req, res) => {
+  const { name, email, phone, address } = req.body;
   try {
-    const { name, email, phone, address } = req.body;
-    const newMember = await Member.create({ name, email, phone, address });
-    res.status(201).json({ message: 'Member created successfully!', member: newMember });
+    const newMember = await createMember({ name, email, phone, address });
+    res.status(201).json({ message: 'Member created successfully', member: newMember });
   } catch (error) {
-    res.status(500).json({ message: 'Error creating member', error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
-// Read
-exports.getAllMembers = async (req, res) => {
+// Update a member by id
+const updateMemberController = async (req, res) => {
+  const { id } = req.params;
+  const memberData = req.body;
   try {
-    const members = await Member.findAll();
-    res.status(200).json({ members });
+    const updatedMember = await updateMember(id, memberData);
+    res.status(200).json({ message: 'Member updated successfully', member: updatedMember });
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching members', error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
-// Read by id
-exports.getMemberById = async (req, res) => {
+// Delete a member by id
+const deleteMemberController = async (req, res) => {
+  const { id } = req.params;
   try {
-    const member = await Member.findByPk(req.params.id);
-    if (!member) {
-      return res.status(404).json({ message: 'Member not found' });
-    }
-    res.status(200).json({ member });
+    const response = await deleteMember(id);
+    res.status(200).json(response);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching member', error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
-// Update by id
-exports.updateMember = async (req, res) => {
+// Get all members with pagination
+const getMembersController = async (req, res) => {
+  const { page, limit, name, email } = req.query;
   try {
-    const { name, email, phone, address } = req.body;
-    const member = await Member.findByPk(req.params.id);
-    if (!member) {
-      return res.status(404).json({ message: 'Member not found' });
-    }
-
-    member.name = name || member.name;
-    member.email = email || member.email;
-    member.phone = phone || member.phone;
-    member.address = address || member.address;
-
-    await member.save();
-    res.status(200).json({ message: 'Member updated successfully!', member });
+    const { data, pagination } = await getMembersWithPagination(
+      parseInt(page, 10) || 1,
+      parseInt(limit, 10) || 10,
+      { name, email }
+    );
+    res.status(200).json({ data, pagination });
   } catch (error) {
-    res.status(500).json({ message: 'Error updating member', error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
-// Delete by id
-exports.deleteMember = async (req, res) => {
-  try {
-    const member = await Member.findByPk(req.params.id);
-    if (!member) {
-      return res.status(404).json({ message: 'Member not found' });
-    }
-
-    await member.destroy();
-    res.status(200).json({ message: 'Member deleted successfully!' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error deleting member', error: error.message });
-  }
+module.exports = {
+  createMemberController,
+  updateMemberController,
+  deleteMemberController,
+  getMembersController,
 };
